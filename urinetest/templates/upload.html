@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Urine Strip Analysis</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Urine Strip Image</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="imageInput">Choose an image</label>
+            <input type="file" id="imageInput" name="image" accept="image/*">
+            <button type="submit">Upload</button>
+        </form>
+        <pre id="results"></pre>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = new FormData();
+            const imageFile = document.getElementById('imageInput').files[0];
+            formData.append('image', imageFile);
+
+            const response = await fetch('/upload/', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            document.getElementById('results').textContent = JSON.stringify(result, null, 2);
+        });
+    </script>
+</body>
+</html>
